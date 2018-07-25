@@ -8,7 +8,7 @@ ARG BUILD_DATE
 RUN echo "VCS_REF: "${VCS_REF}", BUILD_DATE: "${BUILD_DATE}", VERSION: "${VERSION}
 
 LABEL maintainer="frank.foerster@ime.fraunhofer.de" \
-      description="Dockerfile providing the trinity assembly pipeline original maintainer was bhaas@broadinstitute.org" \
+      description="Baseimage for the trinity assembly pipeline original maintainer was bhaas@broadinstitute.org" \
       version=${VERSION} \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.build-date=${BUILD_DATE} \
@@ -144,46 +144,3 @@ RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v0.9.1/Salmon-0
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
 RUN pip install numpy
-
-
-##########
-## Trinity
-
-
-WORKDIR $SRC
-
-ENV TRINITY_VERSION="2.6.6"
-ENV TRINITY_CO="06f284a"
-
-WORKDIR $SRC
-
-RUN git clone https://github.com/trinityrnaseq/trinityrnaseq.git && \
-    cd trinityrnaseq && \
-    git checkout $TRINITY_CO && \
-    make && make plugins && \
-    make install && \
-    cd ../ && rm -r trinityrnaseq
-
-ENV TRINITY_HOME /usr/local/bin/trinityrnaseq
-
-ENV PATH=${TRINITY_HOME}:${PATH}
-
-COPY Dockerfile $SRC/Dockerfile.$TRINITY_VERSION
-
-
-
-RUN Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("fastcluster", dep = TRUE)'
-
-## patch the RSEM install... need convert-sam-for-rsem  too!
-WORKDIR $SRC
-RUN wget https://github.com/deweylab/RSEM/archive/v1.3.0.tar.gz && \
-    tar xvf v1.3.0.tar.gz && \
-            cd RSEM-1.3.0 && \
-                        make && \
-                                        cp rsem-* $BIN && \
-                                                        cp convert-sam-for-rsem $BIN && \
-                                                                            cp rsem_perl_utils.pm /usr/local/lib/site_perl/ && \
-                                                                                                    cd ../ && rm -r RSEM-1.3.0
-
-# adding multiqc
-RUN pip install git+https://github.com/ewels/MultiQC.git
