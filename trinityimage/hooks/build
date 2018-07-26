@@ -1,6 +1,18 @@
 #!/bin/bash
 export BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+# check if VARIABLE exists
+# taken from https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
+if [ -z ${GIT_SHA1+x} ]
+then
+    export GIT_SHA1=$(git rev-parse HEAD)
+fi
 export VCS_REF=$(echo ${GIT_SHA1} | cut -b 1-7)
+
+if [ -z ${SOURCE_BRANCH+x} ]
+then
+    export SOURCE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+fi
 
 env
 
