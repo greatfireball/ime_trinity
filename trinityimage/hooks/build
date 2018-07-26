@@ -20,4 +20,5 @@ docker build \
        --build-arg VERSION=${SOURCE_BRANCH} \
        --build-arg VCS_REF=${VCS_REF} \
        --build-arg BUILD_DATE=${BUILD_DATE} \
+       --no-cache \
        -t $IMAGE_NAME .
