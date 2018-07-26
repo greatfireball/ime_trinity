@@ -21,4 +21,5 @@ docker build \
        --build-arg VCS_REF=${VCS_REF} \
        --build-arg BUILD_DATE=${BUILD_DATE} \
        --no-cache \
+       --pull \
        -t $IMAGE_NAME .
