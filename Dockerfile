@@ -166,11 +166,9 @@ RUN git clone https://github.com/trinityrnaseq/trinityrnaseq.git && \
 
 ENV TRINITY_HOME /usr/local/bin/trinityrnaseq
 
-ENV PATH=${TRINITY_HOME}:${PATH}
+ENV PATH ${TRINITY_HOME}:${PATH}
 
 COPY Dockerfile $SRC/Dockerfile.$TRINITY_VERSION
-
-
 
 RUN Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("fastcluster", dep = TRUE)'
 
@@ -178,12 +176,15 @@ RUN Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstall
 WORKDIR $SRC
 RUN wget https://github.com/deweylab/RSEM/archive/v1.3.0.tar.gz && \
     tar xvf v1.3.0.tar.gz && \
-            cd RSEM-1.3.0 && \
-                        make && \
-                                        cp rsem-* $BIN && \
-                                                        cp convert-sam-for-rsem $BIN && \
-                                                                            cp rsem_perl_utils.pm /usr/local/lib/site_perl/ && \
-                                                                                                    cd ../ && rm -r RSEM-1.3.0
+    cd RSEM-1.3.0 && \
+    make && \
+    cp rsem-* $BIN && \
+    cp convert-sam-for-rsem $BIN && \
+    cp rsem_perl_utils.pm /usr/local/lib/site_perl/ && \
+    cd ../ && rm -r RSEM-1.3.0
 
 # adding multiqc
 RUN pip install git+https://github.com/ewels/MultiQC.git
+
+VOLUME /data
+WORKDIR /data
