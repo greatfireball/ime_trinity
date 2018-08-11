@@ -166,7 +166,7 @@ RUN git clone https://github.com/trinityrnaseq/trinityrnaseq.git && \
 
 ENV TRINITY_HOME /usr/local/bin/trinityrnaseq
 
-ENV PATH=${TRINITY_HOME}:${PATH}
+ENV PATH ${TRINITY_HOME}:${PATH}
 
 COPY Dockerfile $SRC/Dockerfile.$TRINITY_VERSION
 
