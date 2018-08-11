@@ -185,3 +185,6 @@ RUN wget https://github.com/deweylab/RSEM/archive/v1.3.0.tar.gz && \
 
 # adding multiqc
 RUN pip install git+https://github.com/ewels/MultiQC.git
+
+VOLUME /data
+WORKDIR /data
